@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 const TRACKS = {
-  slide1bg: "https://files.catbox.moe/ubv8vo.mp3",
+  slide0: "https://files.catbox.moe/ubv8vo.mp3",
+  slide1: "https://files.catbox.moe/ubv8vo.mp3",
   slide2: "https://files.catbox.moe/gzjzyo.mp3",
   slide3: "https://files.catbox.moe/dhkehr.mp3",
-  slide4: "https://files.catbox.moe/tgjex3.mp3",
-  slide5: "https://files.catbox.moe/hf20bx.mp3",
+  slide4: "https://files.catbox.moe/hf20bx.mp3",
 };
 
 interface TimeLeft {
@@ -103,7 +103,7 @@ export default function Index() {
   const playTrack = useCallback((src: string, loop = false) => {
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current.src = "";
+      audioRef.current = null;
     }
     const audio = new Audio(src);
     audio.loop = loop;
@@ -115,7 +115,6 @@ export default function Index() {
   const stopTrack = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current.src = "";
       audioRef.current = null;
     }
   }, []);
@@ -128,28 +127,20 @@ export default function Index() {
     }, 600);
   }, []);
 
-  useEffect(() => {
-    if (slide === 1 && musicStarted) {
-      playTrack(TRACKS.slide1bg, true);
-    } else if (slide === 2) {
-      playTrack(TRACKS.slide2);
-    } else if (slide === 3) {
-      playTrack(TRACKS.slide3);
-    } else if (slide === 4) {
-      playTrack(TRACKS.slide4);
-    } else if (slide === 5) {
-      playTrack(TRACKS.slide5);
-    }
-  }, [slide, musicStarted, playTrack]);
-
   const handleStart = () => {
     setMusicStarted(true);
-    playTrack(TRACKS.slide1bg, true);
+    playTrack(TRACKS.slide0, true);
   };
 
   const handleNext = (nextSlide: number) => {
     stopTrack();
     goToSlide(nextSlide);
+    setTimeout(() => {
+      if (nextSlide === 1) playTrack(TRACKS.slide1, true);
+      else if (nextSlide === 2) playTrack(TRACKS.slide2);
+      else if (nextSlide === 3) playTrack(TRACKS.slide3);
+      else if (nextSlide === 4) playTrack(TRACKS.slide4);
+    }, 650);
   };
 
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -169,8 +160,7 @@ export default function Index() {
         {slide === 1 && <SlideOne onNext={() => handleNext(2)} />}
         {slide === 2 && <SlideTwo onNext={() => handleNext(3)} />}
         {slide === 3 && <SlideThree onNext={() => handleNext(4)} />}
-        {slide === 4 && <SlideFour onNext={() => handleNext(5)} />}
-        {slide === 5 && <SlideFive />}
+        {slide === 4 && <SlideFive />}
       </div>
     </div>
   );
@@ -271,11 +261,7 @@ function SlideTwo({ onNext }: { onNext: () => void }) {
   );
 }
 
-const STATS = [
-  { label: "сколько мы дружим", value: "842 дня" },
-  { label: "сколько раз ты был(а) на моём дне рождения", value: "2 раза" },
-  { label: "как сильно я дорожу тобой", value: "как самое красивое и сильное описание любви в твоём любимом фанфике" },
-];
+
 
 function SlideThree({ onNext }: { onNext: () => void }) {
   return (
@@ -299,26 +285,6 @@ function SlideThree({ onNext }: { onNext: () => void }) {
   );
 }
 
-function SlideFour({ onNext }: { onNext: () => void }) {
-  return (
-    <div className="slide slide-four">
-      <FeathersBg color="#ffd700" count={14} />
-      <div className="slide-content">
-        <p className="slide-eyebrow stat-eyebrow">статистика нашей дружбы</p>
-        <div className="stats-list">
-          {STATS.map((s, i) => (
-            <div className="stat-item" key={i} style={{ animationDelay: `${i * 0.2}s` }}>
-              <p className="stat-label">{s.label}</p>
-              <p className="stat-value">{s.value}</p>
-            </div>
-          ))}
-        </div>
-        <p className="slide-cta-text">И далее я хочу разделить с тобой свои 30 лет и переход в новое десятилетие</p>
-        <button className="btn-primary" onClick={onNext}>подробности →</button>
-      </div>
-    </div>
-  );
-}
 
 const PROGRAM = [
   { time: "17:30 — 18:30", desc: "Сбор, лёгкий перекус, первые тосты" },
