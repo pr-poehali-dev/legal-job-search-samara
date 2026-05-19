@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const TRACKS = {
   slide0: "https://files.catbox.moe/ubv8vo.mp3",
   slide1: "https://files.catbox.moe/ubv8vo.mp3",
-  slide2: "https://files.catbox.moe/gzjzyo.mp3",
+  slide2: "https://files.catbox.moe/y2pkz4.mp3",
   slide3: "https://files.catbox.moe/dhkehr.mp3",
   slide4: "https://files.catbox.moe/hf20bx.mp3",
 };
